@@ -1,0 +1,15 @@
+# Node
+node_modules/
+
+# dotenv environment variables
+.env
+.env.*
+.env.local
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+Dockerfile*
+
+# Editors and IDEs
+.vscode/
