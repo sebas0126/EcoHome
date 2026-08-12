@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test Chat EcoHome</title>
+  </head>
+  <body>
+    <h2>Chat Interno - POC</h2>
+    <ul id="messages"></ul>
+    <input id="chat-input" type="text" placeholder="Escribe un mensaje..." />
+    <button onclick="sendMessage()">Enviar</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      socket.on("new-message", (data) => {
+        const li = document.createElement("li");
+        li.textContent = `[${data.userId}]: ${data.text} (${new Date(data.timestamp).toLocaleTimeString()})`;
+        document.getElementById("messages").appendChild(li);
+      });
+
+      function sendMessage() {
+        const input = document.getElementById("chat-input");
+        if (input.value) {
+          socket.emit("new-message", { text: input.value });
+          input.value = "";
+        }
+      }
+    </script>
+  </body>
+</html>

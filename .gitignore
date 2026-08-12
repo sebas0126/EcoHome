@@ -9,6 +9,7 @@ node_modules/
 # Docker
 docker-compose.override.yml
 docker-compose.*.yml
+docker-compose.yml
 Dockerfile*
 
 # Editors and IDEs
