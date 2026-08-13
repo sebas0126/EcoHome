@@ -3,26 +3,69 @@
   <head>
     <meta charset="UTF-8" />
     <title>Test Chat EcoHome</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      #messages {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+      #messages li {
+        padding: 8px;
+        margin-bottom: 5px;
+        background-color: #f4f4f9;
+        border-radius: 4px;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
-    <h2>Chat Interno - POC</h2>
+    <h2>Chat Interno</h2>
+
     <ul id="messages"></ul>
-    <input id="chat-input" type="text" placeholder="Escribe un mensaje..." />
-    <button onclick="sendMessage()">Enviar</button>
+
+    <input
+      id="chat-input"
+      type="text"
+      placeholder="Escribe un mensaje..."
+      style="width: 300px; padding: 5px"
+    />
+    <button onclick="sendMessage()" style="padding: 5px 10px">Enviar</button>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const socket = io();
+      const myJwtToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzg2NTM2NjgzLCJleHAiOjE3ODY1NDM4ODN9.11NvkjcDraZYFZmtjpw-Ou7l8z54HeHXj9vnscmgyRg";
+
+      const socket = io({
+        auth: {
+          token: myJwtToken,
+        },
+      });
+
+      socket.on("connect_error", (err) => {
+        console.error("Error de conexión:", err.message);
+        const li = document.createElement("li");
+        li.className = "error";
+        li.textContent = `Error: ${err.message}`;
+        document.getElementById("messages").appendChild(li);
+      });
 
       socket.on("new-message", (data) => {
         const li = document.createElement("li");
-        li.textContent = `[${data.userId}]: ${data.text} (${new Date(data.timestamp).toLocaleTimeString()})`;
+        li.textContent = `User ${data.user_id}: ${data.text}`;
         document.getElementById("messages").appendChild(li);
       });
 
       function sendMessage() {
         const input = document.getElementById("chat-input");
-        if (input.value) {
+        if (input.value.trim() !== "") {
           socket.emit("new-message", { text: input.value });
           input.value = "";
         }
