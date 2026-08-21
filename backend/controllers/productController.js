@@ -2,10 +2,14 @@ const { pool } = require('../config/db');
 
 const getProducts = async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products ORDER BY id ASC');
-    res.json(result.rows);
+    const result = await pool.query(`
+      SELECT p.id, p.name, p.price, u.name AS creator_name 
+      FROM products p 
+      LEFT JOIN users u ON p.created_by = u.id
+    `);
+    res.status(200).json(result.rows);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener productos' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -24,6 +28,7 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   const { name, price } = req.body;
+  const userId = req.user.id;
 
   const parsedPrice = parseFloat(price);
   if (!name || isNaN(parsedPrice) || parsedPrice <= 0) {
@@ -32,8 +37,8 @@ const createProduct = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *',
-      [name, parsedPrice]
+      'INSERT INTO products (name, price, created_by) VALUES ($1, $2, $3) RETURNING *',
+      [name, parsedPrice, userId]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {

@@ -43,7 +43,7 @@ function Login({ setToken }) {
           style={{ padding: '10px' }}
         />
         <button type="submit" style={{ padding: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none' }}>
-          Entrar al Chat
+          Iniciar Sesión
         </button>
       </form>
     </div>
