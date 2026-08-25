@@ -5,11 +5,8 @@ const Catalog = ({ token, onProductCreated }) => {
   const [newProductName, setNewProductName] = useState('');
   const [newProductPrice, setNewProductPrice] = useState('');
 
-  // NUEVO: Estado "gatillo" para recargar la lista
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Todo el fetch queda aislado adentro. 
-  // React ejecutará esto al cargar por primera vez O cuando cambie refreshTrigger
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -28,7 +25,7 @@ const Catalog = ({ token, onProductCreated }) => {
     if (token) {
       fetchProducts();
     }
-  }, [token, refreshTrigger]); // Dependencias totalmente nativas y limpias
+  }, [token, refreshTrigger]);
 
   const handleCreateProduct = async (e) => {
     e.preventDefault();
@@ -46,16 +43,28 @@ const Catalog = ({ token, onProductCreated }) => {
       });
 
       if (res.status === 201) {
-        onProductCreated(); // Sube el contador en la barra superior de App.jsx
+        onProductCreated();
         setNewProductName('');
         setNewProductPrice('');
 
-        // Simplemente "disparamos" el gatillo. 
-        // Esto le avisa al useEffect que debe volver a hacer la petición.
         setRefreshTrigger(prev => prev + 1);
       }
     } catch (error) {
       console.error("Error creando producto:", error);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      const res = await fetch(`http://localhost:3000/products/${productId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.status === 200) {
+        setRefreshTrigger(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error("Error eliminando producto:", error);
     }
   };
 
@@ -87,10 +96,18 @@ const Catalog = ({ token, onProductCreated }) => {
       <h3>Listado del Sistema</h3>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {products.map(p => (
-          <li key={p.id} style={{ padding: '10px', borderBottom: '1px solid #eee' }}>
-            <strong>{p.name}</strong> - ${p.price}
-            <br />
-            <small style={{ color: 'gray' }}>Creado por: {p.creator_name}</small>
+          <li key={p.id} style={{ padding: '10px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center' }}>
+            <div>
+              <strong>{p.name}</strong> - ${p.price}
+              <br />
+              <small style={{ color: 'gray' }}>Creado por: {p.creator_name}</small>
+            </div>
+            <button
+              style={{ marginLeft: 'auto', backgroundColor: '#dc3545', padding: '8px 16px', borderRadius: '4px', color: 'white', border: 'none', cursor: 'pointer' }}
+              onClick={() => handleDeleteProduct(p.id)}
+            >
+              Eliminar
+            </button>
           </li>
         ))}
       </ul>

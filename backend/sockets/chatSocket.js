@@ -2,7 +2,7 @@ const { pool } = require('../config/db');
 
 module.exports = (io) => {
   io.on('connection', async (socket) => {
-    console.log(`Usuario autenticado conectado | ID BD: ${socket.user.id} | Socket: ${socket.id}`);
+    console.log(`Usuario autenticado conectado | BD DATA: ${socket.user.id} | Socket: ${socket.id}`);
 
     try {
       const historyResult = await pool.query(`
@@ -16,6 +16,7 @@ module.exports = (io) => {
             `);
 
       socket.emit('chat-history', historyResult.rows);
+      console.log(`Historial cargado: ${historyResult.rows.length} mensajes`);
     } catch (error) {
       console.error('Error al cargar historial:', error);
     }
@@ -31,6 +32,7 @@ module.exports = (io) => {
         console.log(`Mensaje guardado en BD con ID: ${savedMessage.id}`);
 
         io.emit('new-message', savedMessage);
+        console.log(`Mensaje emitido por ${socket.user.id}: ${savedMessage.text}`);
 
       } catch (error) {
         console.error('Error al guardar el mensaje:', error);

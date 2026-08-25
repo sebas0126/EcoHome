@@ -90,7 +90,7 @@ const styles = {
   },
   userInfo: {
     fontWeight: 'bold',
-    color: '#4CAF50', // Un verde estilo EcoHome para resaltar
+    color: '#4CAF50',
     fontSize: '18px'
   },
   btn: {

@@ -8,11 +8,11 @@ const getUserStats = async (req, res) => {
       LEFT JOIN products p ON u.id = p.created_by 
       WHERE u.id = $1 
       GROUP BY u.id
-    `, [req.user.id]); // Utiliza el ID extraído por tu middleware
+    `, [req.user.id]);
 
     res.status(200).json({
       name: result.rows[0].name,
-      count: parseInt(result.rows[0].total_products) // COUNT devuelve un string en pg, lo parseamos
+      count: parseInt(result.rows[0].total_products)
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
