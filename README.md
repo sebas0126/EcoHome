@@ -20,19 +20,17 @@ El sistema utiliza PostgreSQL para garantizar la integridad referencial y la aud
    ```
    *(Si usas un contenedor manual, asegúrate de iniciarlo con `docker start <nombre_contenedor>` y exponer el puerto `5432`).*
 
-2. Ejecuta el script de inicialización. Abre tu gestor de base de datos (pgAdmin, DBeaver) o la terminal interactiva y ejecuta el archivo `01_ecohome_schema.sql` ubicado en la carpeta de la base de datos para crear las tablas `users`, `products` y `messages`.
+2. Script de Base de Datos y Datos de Prueba (Seeders)
 
-## 🗄️ Script de Base de Datos y Datos de Prueba (Seeders)
-
-Para facilitar la configuración inicial y la revisión del proyecto, se incluye un script SQL unificado. Este archivo no solo contiene la estructura DDL para crear las tablas (`users`, `products` y `messages`), sino que también incluye la inserción de **datos de prueba iniciales**. 
-
-Estos datos pre-cargados permiten evaluar inmediatamente el funcionamiento del catálogo, la auditoría de productos y la visualización de mensajes en el chat corporativo interno sin necesidad de registros manuales.
-
-Puedes encontrar el script completo y listo para ejecutarse en tu gestor de base de datos en el siguiente enlace del repositorio:
-
-📄 **[Ver script SQL: backend/config/CREATE.sql](https://github.com/sebas0126/EcoHome/blob/master/backend/config/CREATE.sql)**
-
-*(Nota de seguridad: Los usuarios de prueba generados en el script requieren que sus contraseñas sean encriptadas con `bcrypt` desde el código para poder iniciar sesión con ellos en el entorno local, se recomienda crear los usuarios directamente desde Postman).*
+   Para facilitar la configuración inicial y la revisión del proyecto, se incluye un script SQL unificado. Este archivo no solo contiene la estructura DDL para crear las tablas (`users`, `products` y `messages`), sino que también incluye la inserción de **datos de prueba iniciales**. 
+   
+   Estos datos pre-cargados permiten evaluar inmediatamente el funcionamiento del catálogo, la auditoría de productos y la visualización de mensajes en el chat corporativo interno sin necesidad de registros manuales.
+   
+   Puedes encontrar el script completo y listo para ejecutarse en tu gestor de base de datos en el siguiente enlace del repositorio:
+   
+   📄 **[Ver script SQL: backend/config/CREATE.sql](https://github.com/sebas0126/EcoHome/blob/master/backend/config/CREATE.sql)**
+   
+   *(Nota de seguridad: Los usuarios de prueba generados en el script requieren que sus contraseñas sean encriptadas con `bcrypt` desde el código para poder iniciar sesión con ellos en el entorno local, se recomienda crear los usuarios directamente desde Postman).*
 
 ---
 
